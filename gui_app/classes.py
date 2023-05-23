@@ -4,8 +4,8 @@ from fpdf import FPDF
 class PDF(FPDF):
     def header(self):
         # Header implementation
-        self.set_font('Arial', 'B', 12)
-        self.cell(0, 10, 'My Document', 0, 1, 'C')
+        self.set_font('Times', 'B', 12)
+        self.cell(0, 10, 'Whatsapp Chat: Estadísticas', 0, 1, 'C')
 
     def footer(self):
         # Footer implementation
