@@ -1,15 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
-
 import pandas as pd
 import threading
-
 from classes import PDF
-
 from analyzer import analyze
-
 from matplotlib import pyplot as plt
+import os
 
 def create_gui():
     def process_file():
@@ -83,9 +80,10 @@ def get_df_from_csv(input):
 
 def get_pdf(input):
 
-    df = get_df_from_csv('../chats/chat_sentiment.csv')
+    # df = get_df_from_csv('../chats/chat_sentiment.csv')
+    # df['polarity'] = pd.to_numeric(df['polarity'], errors='coerce')
 
-    df['polarity'] = pd.to_numeric(df['polarity'], errors='coerce')
+    df = analyze(input)
 
     # We get the number of messages per user
     number_of_messages = df.groupby('Usuario')['Mensaje'].count()
@@ -180,6 +178,12 @@ def get_pdf(input):
 
     # Generate the PDF file
     pdf.output('my_document.pdf', 'F')
+
+    # we remove the images
+    os.remove('number_of_messages.png')
+    os.remove('number_of_messages_pie.png')
+    os.remove('activity_per_hour.png')
+    os.remove('activity_per_day.png')
 
     print("PDF generated successfully!")
 
