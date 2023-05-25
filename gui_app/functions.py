@@ -4,7 +4,8 @@ from tkinter import ttk
 import pandas as pd
 import threading
 from classes import PDF
-from analyzer import analyze
+from nltk_analyzer import analyze_nltk
+from spacy_analyzer import analyze_spacy
 from matplotlib import pyplot as plt
 import os
 
@@ -80,14 +81,14 @@ def get_df_from_csv(input):
 
 def get_pdf(input):
 
-    # df = get_df_from_csv('../chats/chat_sentiment.csv')
-    # df['polarity'] = pd.to_numeric(df['polarity'], errors='coerce')
+    df = get_df_from_csv('./chat_sentiment.csv')
+    df['polarity'] = pd.to_numeric(df['polarity'], errors='coerce')
 
-    df = analyze(input)
+    # df = analyze_nltk(input)
+    # df = analyze_spacy(input)
 
     # We get the number of messages per user
     number_of_messages = df.groupby('Usuario')['Mensaje'].count()
-    print(number_of_messages)
 
     # Create a PDF object
     pdf = PDF()
@@ -118,8 +119,8 @@ def get_pdf(input):
 
     pdf.image('assets/medal_1.png', x=25, y=35, w=50)
     pdf.set_font('Arial', 'B', 24)
-    pdf.set_xy(80, 50)
-    pdf.cell(0, 10, most_positive_user, 0, 1, 'L')
+    pdf.set_xy(70, 50)
+    pdf.cell(80, 10, most_positive_user, 0, 1, 'L')
 
     pdf.image('assets/medal_2.png', x=130, y=35, w=25)
     pdf.set_font('Arial', 'B', 16)
@@ -184,6 +185,12 @@ def get_pdf(input):
     os.remove('number_of_messages_pie.png')
     os.remove('activity_per_hour.png')
     os.remove('activity_per_day.png')
+
+    # # We print the most positive and negative mesaages
+    # print("Most positive messages:")
+    # print(df.sort_values(by='polarity', ascending=False)['Mensaje'].head(10))
+    # print("Most negative messages:")
+    # print(df.sort_values(by='polarity', ascending=True)['Mensaje'].head(10))
 
     print("PDF generated successfully!")
 
