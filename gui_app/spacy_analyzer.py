@@ -37,13 +37,14 @@ def whatsapp_to_df(path):
     
     return df
 
+es_core_news_sm = spacy.load("es_core_news_sm")
 nlp = spacy.load("../model/model-best")
 REGX_USERNAME = r"@[A-Za-z0-9$-_@.&+]+"
 
 def preprocessing(text):
   text = text.lower()
   text = re.sub(REGX_USERNAME, ' ', text)
-  tokens = [token.text for token in nlp(text)]
+  tokens = [token.text for token in es_core_news_sm(text)]
   tokens = [t for t in tokens if t not in STOP_WORDS and t not in string.punctuation and len(t) > 2]
   tokens = [t for t in tokens if not t.isdigit()]
 

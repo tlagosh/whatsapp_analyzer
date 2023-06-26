@@ -81,11 +81,11 @@ def get_df_from_csv(input):
 
 def get_pdf(input):
 
-    df = get_df_from_csv('./chat_sentiment.csv')
-    df['polarity'] = pd.to_numeric(df['polarity'], errors='coerce')
+    # df = get_df_from_csv('./chat_sentiment.csv')
+    # df['polarity'] = pd.to_numeric(df['polarity'], errors='coerce')
 
-    # df = analyze_nltk(input)
-    # df = analyze_spacy(input)
+    #df = analyze_nltk(input)
+    df = analyze_spacy(input)
 
     # We get the number of messages per user
     number_of_messages = df.groupby('Usuario')['Mensaje'].count()
@@ -186,11 +186,13 @@ def get_pdf(input):
     os.remove('activity_per_hour.png')
     os.remove('activity_per_day.png')
 
-    # # We print the most positive and negative mesaages
-    # print("Most positive messages:")
-    # print(df.sort_values(by='polarity', ascending=False)['Mensaje'].head(10))
-    # print("Most negative messages:")
-    # print(df.sort_values(by='polarity', ascending=True)['Mensaje'].head(10))
+    # We print the most positive and negative mesaages and their polarity
+    print("Most positive messages:")
+    print(df.sort_values(by='polarity', ascending=False)['Mensaje'].head(10))
+    print(df.sort_values(by='polarity', ascending=False)['polarity'].head(10))
+    print("Most negative messages:")
+    print(df.sort_values(by='polarity', ascending=True)['Mensaje'].head(10))
+    print(df.sort_values(by='polarity', ascending=True)['polarity'].head(10))
 
     print("PDF generated successfully!")
 

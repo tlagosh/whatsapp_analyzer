@@ -4,9 +4,11 @@ import numpy as np
 import tqdm
 import random
 import matplotlib
+from googletrans import Translator, constants
+from spacy.lang.en.stop_words import STOP_WORDS
 
+translator = Translator()
 
-nltk.download('vader_lexicon') # Obligatorio para usar SentimentIntensityAnalyzer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 sid = SentimentIntensityAnalyzer()
 
@@ -50,15 +52,20 @@ def corregir_oracion(corrector,string):
     return oracion_fixed
 
 def preprocess(ReviewText):
-    ReviewText = ReviewText.str.replace('\t', ' ')
-    ReviewText = ReviewText.str.replace('\r', ' ')
-    ReviewText = ReviewText.str.replace('\n', ' ')
+    ReviewText = ReviewText.replace('\t', ' ')
+    ReviewText = ReviewText.replace('\r', ' ')
+    ReviewText = ReviewText.replace('\n', ' ')
+
+    # translate
+    # ReviewText = translator.translate(ReviewText, dest='en').text
+
     return (ReviewText)
 
 def get_polarity(df):
   for i in tqdm.tqdm(range(len(df)), desc="Getting polarity"):
       try:
           temp=df['Mensaje'][i]
+          preprocess(temp)
           p=sid.polarity_scores(str(temp))['compound']
           neg=sid.polarity_scores(str(temp))['neg']
           neu=sid.polarity_scores(str(temp))['neu']
